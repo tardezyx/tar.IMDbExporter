@@ -37,10 +37,11 @@ namespace tar.IMDbExporter.Gui {
 
       btnProcess.Enabled     =
       grbxExport.Enabled     =
-      grbxScrape.Enabled     = chbxExportJson.CheckState  == CheckState.Checked || chbxExportTxt.CheckState        == CheckState.Checked;
-      nudNews.Enabled        = chbxNews.CheckState        == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
-      nudUserReviews.Enabled = chbxUserReviews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
-      tbxCountryCode.Enabled = chbxExportTxt.CheckState   == CheckState.Checked;
+      grbxScrape.Enabled     = chbxExportJson.Checked || chbxExportTxt.Checked;
+      lblWarning.Visible     = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
+      nudNews.Enabled        = chbxNews.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
+      nudUserReviews.Enabled = chbxUserReviews.Checked || chbxScrapeEverything.Checked;
+      tbxCountryCode.Enabled = chbxExportTxt.Checked;
     }
     #endregion
     #region --- regex -----------------------------------------------------------------------------
@@ -90,7 +91,7 @@ namespace tar.IMDbExporter.Gui {
         return false;
       }
 
-      if (Operator.GetCountryNameByCode(tbxCountryCode.Text) == null) {
+      if (Operator.GetCountryNameByCode(tbxCountryCode.Text) is null) {
         lblStatus.Text = "(ERROR) Please set correct country code!";
         return false;
       }
@@ -162,7 +163,7 @@ namespace tar.IMDbExporter.Gui {
         settings
       );
 
-      if (imdbTitle == null) {
+      if (imdbTitle is null) {
         lblStatus.Text = $"(ERROR) IMDb title '{iMDbID}' could not be scraped!";
         ToggleControls(true);
         return;
@@ -188,7 +189,7 @@ namespace tar.IMDbExporter.Gui {
         if (chbxExportTxt.CheckState == CheckState.Checked) {
           string exportText = Operator.Parse(
             imdbTitle,
-            tbxCountryCode.Text.ToLower()
+            tbxCountryCode.Text
           );
 
           await File.WriteAllTextAsync(
@@ -250,7 +251,7 @@ namespace tar.IMDbExporter.Gui {
     private void UpdateControlsByCheckBoxes() {
       btnProcess.Enabled            =
       grbxExport.Enabled            =
-      grbxScrape.Enabled            = chbxExportJson.CheckState == CheckState.Checked || chbxExportTxt.CheckState == CheckState.Checked;
+      grbxScrape.Enabled            = chbxExportJson.Checked || chbxExportTxt.Checked;
 
       chbxAlternateTitles.Enabled   =
       chbxAlternateVersions.Enabled =
@@ -286,10 +287,10 @@ namespace tar.IMDbExporter.Gui {
       chbxTechnicalPage.Enabled     =
       chbxTopics.Enabled            =
       chbxTriviaEntries.Enabled     =
-      chbxUserReviews.Enabled       = chbxScrapeEverything.CheckState != CheckState.Checked;
-      nudNews.Enabled               = chbxNews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
-      nudUserReviews.Enabled        = chbxUserReviews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
-      tbxCountryCode.Enabled        = chbxExportTxt.CheckState == CheckState.Checked;
+      chbxUserReviews.Enabled       = !chbxScrapeEverything.Checked;
+      nudNews.Enabled               = chbxNews.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
+      nudUserReviews.Enabled        = chbxUserReviews.Checked || chbxScrapeEverything.Checked;
+      tbxCountryCode.Enabled        = chbxExportTxt.Checked;
     }
     #endregion
     #region --- update status by progress ---------------------------------------------------------
@@ -318,7 +319,11 @@ namespace tar.IMDbExporter.Gui {
       chbxNews.CheckStateChanged             +=       (s, e) => UpdateControlsByCheckBoxes();
       chbxScrapeEverything.CheckStateChanged +=       (s, e) => UpdateControlsByCheckBoxes();
       chbxUserReviews.CheckStateChanged      +=       (s, e) => UpdateControlsByCheckBoxes();
+      nudNews.EnabledChanged                 +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
+      nudNews.ValueChanged                   +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
       nudUpdatePeriod.ValueChanged           +=       (s, e) => Settings.Current.Stored.UpdateHashesPeriodInDays = (int)nudUpdatePeriod.Value;
+      nudUserReviews.EnabledChanged          +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
+      nudUserReviews.ValueChanged            +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
       tbxExportFolder.TextChanged            +=       (s, e) => Settings.Current.Stored.ExportFolder = tbxExportFolder.Text;
       tbxPathToHashFile.TextChanged          +=       (s, e) => Settings.Current.Stored.PathToHashFile = tbxPathToHashFile.Text;
       tbxUrl.Validated                       +=       (s, e) => GetImdbId();

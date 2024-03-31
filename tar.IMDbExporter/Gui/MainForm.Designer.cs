@@ -10,7 +10,7 @@
     /// </summary>
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing) {
-      if (disposing && (components != null)) {
+      if (disposing && (components is not null)) {
         components.Dispose();
       }
       base.Dispose(disposing);
@@ -70,7 +70,7 @@
       groupBox2 = new GroupBox();
       chbxNews = new CheckBox();
       chbxUserReviews = new CheckBox();
-      label1 = new Label();
+      lblWarning = new Label();
       nudNews = new NumericUpDown();
       lblUserReviewsRequests = new Label();
       nudUserReviews = new NumericUpDown();
@@ -109,16 +109,16 @@
       // tbxIMDbID
       // 
       tbxIMDbID.BackColor = Color.PaleGoldenrod;
-      tbxIMDbID.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+      tbxIMDbID.Font = new Font("Segoe UI", 9.75F);
       tbxIMDbID.ForeColor = SystemColors.ControlText;
       tbxIMDbID.Location = new Point(84, 43);
       tbxIMDbID.Name = "tbxIMDbID";
-      tbxIMDbID.Size = new Size(102, 25);
+      tbxIMDbID.Size = new Size(92, 25);
       tbxIMDbID.TabIndex = 2;
       // 
       // lblIMDbID
       // 
-      lblIMDbID.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+      lblIMDbID.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
       lblIMDbID.Location = new Point(12, 47);
       lblIMDbID.Name = "lblIMDbID";
       lblIMDbID.Size = new Size(66, 17);
@@ -131,7 +131,7 @@
       btnProcess.Anchor = AnchorStyles.Top | AnchorStyles.Right;
       btnProcess.BackColor = Color.Gold;
       btnProcess.FlatStyle = FlatStyle.Flat;
-      btnProcess.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+      btnProcess.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
       btnProcess.Location = new Point(687, 43);
       btnProcess.Name = "btnProcess";
       btnProcess.Size = new Size(75, 29);
@@ -161,7 +161,7 @@
       // 
       // llblExportFolder
       // 
-      llblExportFolder.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      llblExportFolder.Font = new Font("Segoe UI", 9F);
       llblExportFolder.Location = new Point(6, 19);
       llblExportFolder.Name = "llblExportFolder";
       llblExportFolder.Size = new Size(102, 17);
@@ -172,7 +172,7 @@
       // tbxExportFolder
       // 
       tbxExportFolder.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-      tbxExportFolder.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      tbxExportFolder.Font = new Font("Segoe UI", 9F);
       tbxExportFolder.Location = new Point(114, 15);
       tbxExportFolder.Name = "tbxExportFolder";
       tbxExportFolder.Size = new Size(555, 23);
@@ -181,7 +181,7 @@
       // btnExportFolder
       // 
       btnExportFolder.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-      btnExportFolder.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      btnExportFolder.Font = new Font("Segoe UI", 9F);
       btnExportFolder.Location = new Point(675, 15);
       btnExportFolder.Name = "btnExportFolder";
       btnExportFolder.Size = new Size(75, 23);
@@ -191,7 +191,7 @@
       // 
       // lblCountryCode
       // 
-      lblCountryCode.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      lblCountryCode.Font = new Font("Segoe UI", 9F);
       lblCountryCode.Location = new Point(6, 47);
       lblCountryCode.Name = "lblCountryCode";
       lblCountryCode.Size = new Size(102, 17);
@@ -201,11 +201,11 @@
       // 
       // tbxCountryCode
       // 
-      tbxCountryCode.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      tbxCountryCode.Font = new Font("Segoe UI", 9F);
       tbxCountryCode.Location = new Point(114, 44);
       tbxCountryCode.Name = "tbxCountryCode";
       tbxCountryCode.ReadOnly = true;
-      tbxCountryCode.Size = new Size(29, 23);
+      tbxCountryCode.Size = new Size(50, 23);
       tbxCountryCode.TabIndex = 6;
       // 
       // grbxScrape
@@ -215,7 +215,7 @@
       grbxScrape.Controls.Add(groupBox2);
       grbxScrape.Controls.Add(groupBox1);
       grbxScrape.Controls.Add(chbxScrapeEverything);
-      grbxScrape.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+      grbxScrape.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       grbxScrape.Location = new Point(12, 157);
       grbxScrape.Name = "grbxScrape";
       grbxScrape.Size = new Size(756, 272);
@@ -265,7 +265,7 @@
       // chbxAlternateTitles
       // 
       chbxAlternateTitles.AutoSize = true;
-      chbxAlternateTitles.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxAlternateTitles.Font = new Font("Segoe UI", 9F);
       chbxAlternateTitles.Location = new Point(6, 22);
       chbxAlternateTitles.Name = "chbxAlternateTitles";
       chbxAlternateTitles.Size = new Size(129, 19);
@@ -276,7 +276,7 @@
       // chbxAwards
       // 
       chbxAwards.AutoSize = true;
-      chbxAwards.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxAwards.Font = new Font("Segoe UI", 9F);
       chbxAwards.Location = new Point(6, 72);
       chbxAwards.Name = "chbxAwards";
       chbxAwards.Size = new Size(90, 19);
@@ -287,7 +287,7 @@
       // chbxCompanies
       // 
       chbxCompanies.AutoSize = true;
-      chbxCompanies.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxCompanies.Font = new Font("Segoe UI", 9F);
       chbxCompanies.Location = new Point(6, 97);
       chbxCompanies.Name = "chbxCompanies";
       chbxCompanies.Size = new Size(111, 19);
@@ -298,7 +298,7 @@
       // chbxSoundtrack
       // 
       chbxSoundtrack.AutoSize = true;
-      chbxSoundtrack.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxSoundtrack.Font = new Font("Segoe UI", 9F);
       chbxSoundtrack.Location = new Point(432, 22);
       chbxSoundtrack.Name = "chbxSoundtrack";
       chbxSoundtrack.Size = new Size(86, 19);
@@ -309,7 +309,7 @@
       // chbxConnections
       // 
       chbxConnections.AutoSize = true;
-      chbxConnections.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxConnections.Font = new Font("Segoe UI", 9F);
       chbxConnections.Location = new Point(6, 122);
       chbxConnections.Name = "chbxConnections";
       chbxConnections.Size = new Size(118, 19);
@@ -320,7 +320,7 @@
       // chbxExternalReviews
       // 
       chbxExternalReviews.AutoSize = true;
-      chbxExternalReviews.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxExternalReviews.Font = new Font("Segoe UI", 9F);
       chbxExternalReviews.Location = new Point(141, 22);
       chbxExternalReviews.Name = "chbxExternalReviews";
       chbxExternalReviews.Size = new Size(138, 19);
@@ -331,7 +331,7 @@
       // chbxStoryline
       // 
       chbxStoryline.AutoSize = true;
-      chbxStoryline.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxStoryline.Font = new Font("Segoe UI", 9F);
       chbxStoryline.Location = new Point(432, 47);
       chbxStoryline.Name = "chbxStoryline";
       chbxStoryline.Size = new Size(72, 19);
@@ -342,7 +342,7 @@
       // chbxExternalSites
       // 
       chbxExternalSites.AutoSize = true;
-      chbxExternalSites.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxExternalSites.Font = new Font("Segoe UI", 9F);
       chbxExternalSites.Location = new Point(141, 47);
       chbxExternalSites.Name = "chbxExternalSites";
       chbxExternalSites.Size = new Size(120, 19);
@@ -353,7 +353,7 @@
       // chbxTechnicalPage
       // 
       chbxTechnicalPage.AutoSize = true;
-      chbxTechnicalPage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxTechnicalPage.Font = new Font("Segoe UI", 9F);
       chbxTechnicalPage.Location = new Point(432, 97);
       chbxTechnicalPage.Name = "chbxTechnicalPage";
       chbxTechnicalPage.Size = new Size(104, 19);
@@ -364,7 +364,7 @@
       // chbxQuotes
       // 
       chbxQuotes.AutoSize = true;
-      chbxQuotes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxQuotes.Font = new Font("Segoe UI", 9F);
       chbxQuotes.Location = new Point(292, 122);
       chbxQuotes.Name = "chbxQuotes";
       chbxQuotes.Size = new Size(89, 19);
@@ -375,7 +375,7 @@
       // chbxTaglines
       // 
       chbxTaglines.AutoSize = true;
-      chbxTaglines.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxTaglines.Font = new Font("Segoe UI", 9F);
       chbxTaglines.Location = new Point(432, 72);
       chbxTaglines.Name = "chbxTaglines";
       chbxTaglines.Size = new Size(68, 19);
@@ -386,7 +386,7 @@
       // chbxPlotSummaries
       // 
       chbxPlotSummaries.AutoSize = true;
-      chbxPlotSummaries.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxPlotSummaries.Font = new Font("Segoe UI", 9F);
       chbxPlotSummaries.Location = new Point(292, 97);
       chbxPlotSummaries.Name = "chbxPlotSummaries";
       chbxPlotSummaries.Size = new Size(134, 19);
@@ -397,7 +397,7 @@
       // chbxReferencePage
       // 
       chbxReferencePage.AutoSize = true;
-      chbxReferencePage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxReferencePage.Font = new Font("Segoe UI", 9F);
       chbxReferencePage.Location = new Point(292, 172);
       chbxReferencePage.Name = "chbxReferencePage";
       chbxReferencePage.Size = new Size(107, 19);
@@ -408,7 +408,7 @@
       // chbxKeywords
       // 
       chbxKeywords.AutoSize = true;
-      chbxKeywords.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxKeywords.Font = new Font("Segoe UI", 9F);
       chbxKeywords.Location = new Point(141, 172);
       chbxKeywords.Name = "chbxKeywords";
       chbxKeywords.Size = new Size(102, 19);
@@ -419,7 +419,7 @@
       // chbxRatingsPage
       // 
       chbxRatingsPage.AutoSize = true;
-      chbxRatingsPage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxRatingsPage.Font = new Font("Segoe UI", 9F);
       chbxRatingsPage.Location = new Point(292, 147);
       chbxRatingsPage.Name = "chbxRatingsPage";
       chbxRatingsPage.Size = new Size(94, 19);
@@ -430,7 +430,7 @@
       // chbxGoofs
       // 
       chbxGoofs.AutoSize = true;
-      chbxGoofs.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxGoofs.Font = new Font("Segoe UI", 9F);
       chbxGoofs.Location = new Point(141, 147);
       chbxGoofs.Name = "chbxGoofs";
       chbxGoofs.Size = new Size(82, 19);
@@ -441,7 +441,7 @@
       // chbxParentalGuidePage
       // 
       chbxParentalGuidePage.AutoSize = true;
-      chbxParentalGuidePage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxParentalGuidePage.Font = new Font("Segoe UI", 9F);
       chbxParentalGuidePage.Location = new Point(292, 72);
       chbxParentalGuidePage.Name = "chbxParentalGuidePage";
       chbxParentalGuidePage.Size = new Size(132, 19);
@@ -452,7 +452,7 @@
       // chbxFilmingLocations
       // 
       chbxFilmingLocations.AutoSize = true;
-      chbxFilmingLocations.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxFilmingLocations.Font = new Font("Segoe UI", 9F);
       chbxFilmingLocations.Location = new Point(141, 122);
       chbxFilmingLocations.Name = "chbxFilmingLocations";
       chbxFilmingLocations.Size = new Size(145, 19);
@@ -463,7 +463,7 @@
       // chbxMainPage
       // 
       chbxMainPage.AutoSize = true;
-      chbxMainPage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxMainPage.Font = new Font("Segoe UI", 9F);
       chbxMainPage.Location = new Point(292, 47);
       chbxMainPage.Name = "chbxMainPage";
       chbxMainPage.Size = new Size(82, 19);
@@ -474,7 +474,7 @@
       // chbxFilmingDates
       // 
       chbxFilmingDates.AutoSize = true;
-      chbxFilmingDates.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxFilmingDates.Font = new Font("Segoe UI", 9F);
       chbxFilmingDates.Location = new Point(141, 97);
       chbxFilmingDates.Name = "chbxFilmingDates";
       chbxFilmingDates.Size = new Size(123, 19);
@@ -485,7 +485,7 @@
       // chbxCrew
       // 
       chbxCrew.AutoSize = true;
-      chbxCrew.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxCrew.Font = new Font("Segoe UI", 9F);
       chbxCrew.Location = new Point(6, 172);
       chbxCrew.Name = "chbxCrew";
       chbxCrew.Size = new Size(53, 19);
@@ -496,7 +496,7 @@
       // chbxReleaseDates
       // 
       chbxReleaseDates.AutoSize = true;
-      chbxReleaseDates.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxReleaseDates.Font = new Font("Segoe UI", 9F);
       chbxReleaseDates.Location = new Point(292, 197);
       chbxReleaseDates.Name = "chbxReleaseDates";
       chbxReleaseDates.Size = new Size(122, 19);
@@ -507,7 +507,7 @@
       // chbxCriticReviews
       // 
       chbxCriticReviews.AutoSize = true;
-      chbxCriticReviews.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxCriticReviews.Font = new Font("Segoe UI", 9F);
       chbxCriticReviews.Location = new Point(6, 197);
       chbxCriticReviews.Name = "chbxCriticReviews";
       chbxCriticReviews.Size = new Size(99, 19);
@@ -518,7 +518,7 @@
       // chbxTopics
       // 
       chbxTopics.AutoSize = true;
-      chbxTopics.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxTopics.Font = new Font("Segoe UI", 9F);
       chbxTopics.Location = new Point(432, 122);
       chbxTopics.Name = "chbxTopics";
       chbxTopics.Size = new Size(84, 19);
@@ -529,7 +529,7 @@
       // chbxFAQPage
       // 
       chbxFAQPage.AutoSize = true;
-      chbxFAQPage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxFAQPage.Font = new Font("Segoe UI", 9F);
       chbxFAQPage.Location = new Point(141, 72);
       chbxFAQPage.Name = "chbxFAQPage";
       chbxFAQPage.Size = new Size(77, 19);
@@ -540,7 +540,7 @@
       // chbxTriviaEntries
       // 
       chbxTriviaEntries.AutoSize = true;
-      chbxTriviaEntries.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxTriviaEntries.Font = new Font("Segoe UI", 9F);
       chbxTriviaEntries.Location = new Point(432, 147);
       chbxTriviaEntries.Name = "chbxTriviaEntries";
       chbxTriviaEntries.Size = new Size(116, 19);
@@ -551,7 +551,7 @@
       // chbxLocationsPage
       // 
       chbxLocationsPage.AutoSize = true;
-      chbxLocationsPage.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxLocationsPage.Font = new Font("Segoe UI", 9F);
       chbxLocationsPage.Location = new Point(141, 197);
       chbxLocationsPage.Name = "chbxLocationsPage";
       chbxLocationsPage.Size = new Size(106, 19);
@@ -562,7 +562,7 @@
       // chbxAlternateVersions
       // 
       chbxAlternateVersions.AutoSize = true;
-      chbxAlternateVersions.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxAlternateVersions.Font = new Font("Segoe UI", 9F);
       chbxAlternateVersions.Location = new Point(6, 47);
       chbxAlternateVersions.Name = "chbxAlternateVersions";
       chbxAlternateVersions.Size = new Size(120, 19);
@@ -573,7 +573,7 @@
       // chbxMainNews
       // 
       chbxMainNews.AutoSize = true;
-      chbxMainNews.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxMainNews.Font = new Font("Segoe UI", 9F);
       chbxMainNews.Location = new Point(292, 22);
       chbxMainNews.Name = "chbxMainNews";
       chbxMainNews.Size = new Size(85, 19);
@@ -584,7 +584,7 @@
       // chbxCrazyCredits
       // 
       chbxCrazyCredits.AutoSize = true;
-      chbxCrazyCredits.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxCrazyCredits.Font = new Font("Segoe UI", 9F);
       chbxCrazyCredits.Location = new Point(6, 147);
       chbxCrazyCredits.Name = "chbxCrazyCredits";
       chbxCrazyCredits.Size = new Size(95, 19);
@@ -596,12 +596,12 @@
       // 
       groupBox2.Controls.Add(chbxNews);
       groupBox2.Controls.Add(chbxUserReviews);
-      groupBox2.Controls.Add(label1);
+      groupBox2.Controls.Add(lblWarning);
       groupBox2.Controls.Add(nudNews);
       groupBox2.Controls.Add(lblUserReviewsRequests);
       groupBox2.Controls.Add(nudUserReviews);
       groupBox2.Controls.Add(lblNewsRequests);
-      groupBox2.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+      groupBox2.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       groupBox2.Location = new Point(566, 153);
       groupBox2.Name = "groupBox2";
       groupBox2.Size = new Size(191, 114);
@@ -612,7 +612,7 @@
       // chbxNews
       // 
       chbxNews.AutoSize = true;
-      chbxNews.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxNews.Font = new Font("Microsoft Sans Serif", 8.25F);
       chbxNews.Location = new Point(6, 22);
       chbxNews.Name = "chbxNews";
       chbxNews.Size = new Size(53, 17);
@@ -623,7 +623,7 @@
       // chbxUserReviews
       // 
       chbxUserReviews.AutoSize = true;
-      chbxUserReviews.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxUserReviews.Font = new Font("Microsoft Sans Serif", 8.25F);
       chbxUserReviews.Location = new Point(6, 47);
       chbxUserReviews.Name = "chbxUserReviews";
       chbxUserReviews.Size = new Size(92, 17);
@@ -631,20 +631,20 @@
       chbxUserReviews.Text = "User Reviews";
       chbxUserReviews.UseVisualStyleBackColor = true;
       // 
-      // label1
+      // lblWarning
       // 
-      label1.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-      label1.ForeColor = Color.DarkRed;
-      label1.Location = new Point(6, 67);
-      label1.Name = "label1";
-      label1.Size = new Size(173, 42);
-      label1.TabIndex = 46;
-      label1.Text = "0 means:\r\nall entries will be scraped";
-      label1.TextAlign = ContentAlignment.MiddleCenter;
+      lblWarning.Font = new Font("Microsoft Sans Serif", 8.25F);
+      lblWarning.ForeColor = Color.DarkRed;
+      lblWarning.Location = new Point(6, 67);
+      lblWarning.Name = "lblWarning";
+      lblWarning.Size = new Size(173, 42);
+      lblWarning.TabIndex = 46;
+      lblWarning.Text = "WARNING:\r\n0 means all entries will be scraped\r\nwhich can take very long!";
+      lblWarning.TextAlign = ContentAlignment.MiddleCenter;
       // 
       // nudNews
       // 
-      nudNews.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      nudNews.Font = new Font("Microsoft Sans Serif", 8.25F);
       nudNews.Location = new Point(98, 21);
       nudNews.Name = "nudNews";
       nudNews.Size = new Size(41, 20);
@@ -655,7 +655,7 @@
       // 
       // lblUserReviewsRequests
       // 
-      lblUserReviewsRequests.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      lblUserReviewsRequests.Font = new Font("Microsoft Sans Serif", 8.25F);
       lblUserReviewsRequests.Location = new Point(145, 47);
       lblUserReviewsRequests.Name = "lblUserReviewsRequests";
       lblUserReviewsRequests.Size = new Size(29, 17);
@@ -665,7 +665,7 @@
       // 
       // nudUserReviews
       // 
-      nudUserReviews.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      nudUserReviews.Font = new Font("Microsoft Sans Serif", 8.25F);
       nudUserReviews.Location = new Point(98, 46);
       nudUserReviews.Name = "nudUserReviews";
       nudUserReviews.Size = new Size(41, 20);
@@ -676,7 +676,7 @@
       // 
       // lblNewsRequests
       // 
-      lblNewsRequests.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+      lblNewsRequests.Font = new Font("Microsoft Sans Serif", 8.25F);
       lblNewsRequests.Location = new Point(145, 22);
       lblNewsRequests.Name = "lblNewsRequests";
       lblNewsRequests.Size = new Size(34, 17);
@@ -689,7 +689,7 @@
       groupBox1.Controls.Add(chbxEpisodesCard);
       groupBox1.Controls.Add(chbxSeasons);
       groupBox1.Controls.Add(chbxNextEpisode);
-      groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+      groupBox1.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       groupBox1.Location = new Point(566, 47);
       groupBox1.Name = "groupBox1";
       groupBox1.Size = new Size(108, 100);
@@ -700,7 +700,7 @@
       // chbxEpisodesCard
       // 
       chbxEpisodesCard.AutoSize = true;
-      chbxEpisodesCard.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxEpisodesCard.Font = new Font("Segoe UI", 9F);
       chbxEpisodesCard.Location = new Point(6, 22);
       chbxEpisodesCard.Name = "chbxEpisodesCard";
       chbxEpisodesCard.Size = new Size(100, 19);
@@ -711,7 +711,7 @@
       // chbxSeasons
       // 
       chbxSeasons.AutoSize = true;
-      chbxSeasons.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxSeasons.Font = new Font("Segoe UI", 9F);
       chbxSeasons.Location = new Point(6, 72);
       chbxSeasons.Name = "chbxSeasons";
       chbxSeasons.Size = new Size(93, 19);
@@ -722,7 +722,7 @@
       // chbxNextEpisode
       // 
       chbxNextEpisode.AutoSize = true;
-      chbxNextEpisode.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxNextEpisode.Font = new Font("Segoe UI", 9F);
       chbxNextEpisode.Location = new Point(6, 47);
       chbxNextEpisode.Name = "chbxNextEpisode";
       chbxNextEpisode.Size = new Size(95, 19);
@@ -733,7 +733,7 @@
       // chbxScrapeEverything
       // 
       chbxScrapeEverything.AutoSize = true;
-      chbxScrapeEverything.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      chbxScrapeEverything.Font = new Font("Segoe UI", 9F);
       chbxScrapeEverything.Location = new Point(12, 22);
       chbxScrapeEverything.Name = "chbxScrapeEverything";
       chbxScrapeEverything.Size = new Size(82, 19);
@@ -746,7 +746,7 @@
       chbxExportJson.AutoSize = true;
       chbxExportJson.Checked = true;
       chbxExportJson.CheckState = CheckState.Checked;
-      chbxExportJson.Location = new Point(192, 47);
+      chbxExportJson.Location = new Point(182, 47);
       chbxExportJson.Name = "chbxExportJson";
       chbxExportJson.Size = new Size(102, 19);
       chbxExportJson.TabIndex = 39;
@@ -756,7 +756,7 @@
       // chbxExportTxt
       // 
       chbxExportTxt.AutoSize = true;
-      chbxExportTxt.Location = new Point(300, 47);
+      chbxExportTxt.Location = new Point(290, 47);
       chbxExportTxt.Name = "chbxExportTxt";
       chbxExportTxt.Size = new Size(165, 19);
       chbxExportTxt.TabIndex = 40;
@@ -772,7 +772,7 @@
       grbxExport.Controls.Add(tbxExportFolder);
       grbxExport.Controls.Add(lblCountryCode);
       grbxExport.Controls.Add(btnExportFolder);
-      grbxExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+      grbxExport.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       grbxExport.Location = new Point(12, 74);
       grbxExport.Name = "grbxExport";
       grbxExport.Size = new Size(756, 77);
@@ -783,16 +783,16 @@
       // cbxCountryCode
       // 
       cbxCountryCode.DropDownStyle = ComboBoxStyle.DropDownList;
-      cbxCountryCode.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      cbxCountryCode.Font = new Font("Segoe UI", 9F);
       cbxCountryCode.FormattingEnabled = true;
-      cbxCountryCode.Location = new Point(149, 44);
+      cbxCountryCode.Location = new Point(170, 44);
       cbxCountryCode.Name = "cbxCountryCode";
       cbxCountryCode.Size = new Size(294, 23);
       cbxCountryCode.TabIndex = 7;
       // 
       // lblUrl
       // 
-      lblUrl.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+      lblUrl.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold);
       lblUrl.Location = new Point(12, 16);
       lblUrl.Name = "lblUrl";
       lblUrl.Size = new Size(66, 17);
@@ -803,7 +803,7 @@
       // tbxUrl
       // 
       tbxUrl.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-      tbxUrl.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+      tbxUrl.Font = new Font("Segoe UI", 9.75F);
       tbxUrl.Location = new Point(84, 12);
       tbxUrl.Name = "tbxUrl";
       tbxUrl.Size = new Size(684, 25);
@@ -812,7 +812,7 @@
       // btnUpdateHashes
       // 
       btnUpdateHashes.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-      btnUpdateHashes.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      btnUpdateHashes.Font = new Font("Segoe UI", 9F);
       btnUpdateHashes.Location = new Point(679, 50);
       btnUpdateHashes.Name = "btnUpdateHashes";
       btnUpdateHashes.Size = new Size(75, 23);
@@ -829,7 +829,7 @@
       grbxHashes.Controls.Add(btnUpdateHashes);
       grbxHashes.Controls.Add(tbxPathToHashFile);
       grbxHashes.Controls.Add(btnPathToHashFile);
-      grbxHashes.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+      grbxHashes.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
       grbxHashes.Location = new Point(12, 435);
       grbxHashes.Name = "grbxHashes";
       grbxHashes.Size = new Size(760, 83);
@@ -839,7 +839,7 @@
       // 
       // lblDays
       // 
-      lblDays.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      lblDays.Font = new Font("Segoe UI", 9F);
       lblDays.Location = new Point(180, 52);
       lblDays.Name = "lblDays";
       lblDays.Size = new Size(44, 17);
@@ -849,7 +849,7 @@
       // 
       // lblUpdatePeriod
       // 
-      lblUpdatePeriod.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      lblUpdatePeriod.Font = new Font("Segoe UI", 9F);
       lblUpdatePeriod.Location = new Point(6, 52);
       lblUpdatePeriod.Name = "lblUpdatePeriod";
       lblUpdatePeriod.Size = new Size(102, 17);
@@ -859,7 +859,7 @@
       // 
       // nudUpdatePeriod
       // 
-      nudUpdatePeriod.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      nudUpdatePeriod.Font = new Font("Segoe UI", 9F);
       nudUpdatePeriod.Location = new Point(114, 50);
       nudUpdatePeriod.Name = "nudUpdatePeriod";
       nudUpdatePeriod.Size = new Size(60, 23);
@@ -869,7 +869,7 @@
       // 
       // lblJsonPath
       // 
-      lblJsonPath.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      lblJsonPath.Font = new Font("Segoe UI", 9F);
       lblJsonPath.Location = new Point(6, 25);
       lblJsonPath.Name = "lblJsonPath";
       lblJsonPath.Size = new Size(102, 17);
@@ -880,7 +880,7 @@
       // tbxPathToHashFile
       // 
       tbxPathToHashFile.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-      tbxPathToHashFile.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      tbxPathToHashFile.Font = new Font("Segoe UI", 9F);
       tbxPathToHashFile.Location = new Point(114, 21);
       tbxPathToHashFile.Name = "tbxPathToHashFile";
       tbxPathToHashFile.Size = new Size(559, 23);
@@ -889,7 +889,7 @@
       // btnPathToHashFile
       // 
       btnPathToHashFile.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-      btnPathToHashFile.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point);
+      btnPathToHashFile.Font = new Font("Segoe UI", 9F);
       btnPathToHashFile.Location = new Point(679, 21);
       btnPathToHashFile.Name = "btnPathToHashFile";
       btnPathToHashFile.Size = new Size(75, 23);
@@ -1000,7 +1000,7 @@
     private Label lblNewsRequests;
     private Label lblUserReviewsRequests;
     private GroupBox groupBox2;
-    private Label label1;
+    private Label lblWarning;
     private GroupBox groupBox1;
     private GroupBox groupBox3;
     private Button btnUpdateHashes;
