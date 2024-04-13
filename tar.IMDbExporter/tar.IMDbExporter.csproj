@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Authors>tar</Authors>
     <Title>tar.IMDbExporter</Title>
-    <Version>2.0.1</Version>
+    <Version>2.1.0</Version>
     <Description>An IMDb exporter (JSON, TXT)</Description>
     <PackageProjectUrl>https://github.com/tardezyx/tar.IMDbExporter</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -25,12 +25,6 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\HtmlAgilityPack.dll</HintPath>
     </Reference>
-    <Reference Include="System.Text.Encodings.Web">
-      <HintPath>..\System.Text.Encodings.Web.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Text.Json">
-      <HintPath>..\System.Text.Json.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)' == 'Release'">
@@ -40,6 +34,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

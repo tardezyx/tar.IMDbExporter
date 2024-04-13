@@ -1,14 +1,9 @@
 ﻿using System.Text;
-using tar.IMDbExporter.Gui;
 using tar.IMDbScraper.Base;
 using tar.IMDbScraper.Models;
 
 namespace tar.IMDbExporter.Base {
   internal static class Operator {
-    #region --- fields ----------------------------------------------------------------------------
-    private static MainForm? _mainForm;
-    #endregion
-
     #region --- get countries ---------------------------------------------------------------------
     internal static Dictionary<string, string> GetCountries() {
       return new() {
@@ -270,11 +265,6 @@ namespace tar.IMDbExporter.Base {
       return null;
     }
     #endregion
-    #region --- imdb title: updated ---------------------------------------------------------------
-    private static void IMDbTitle_Updated(IMDbTitleProgress progress) {
-      _mainForm?.UpdateStatusByProgress(progress);
-    }
-    #endregion
     #region --- parse -----------------------------------------------------------------------------
     internal static string Parse(IMDbTitle? iMDbTitle, string countryCode) {
       if (iMDbTitle is null) {
@@ -483,22 +473,6 @@ namespace tar.IMDbExporter.Base {
           result.AppendLine(entry.Text!.PlainText);
         }
       }
-
-      return result;
-    }
-    #endregion
-    #region --- scrape imdb title ----------------------------------------------------- (async) ---
-    internal static async Task<IMDbTitle?> ScrapeIMDbTitleAsync(MainForm mainForm, string iMDbID, IMDbTitleSettings settings) {
-      _mainForm = mainForm;
-
-      if (string.IsNullOrEmpty(iMDbID)) {
-        return null;
-      }
-
-      IMDbTitle result = new(iMDbID, settings);
-      result.Updated += new Action<IMDbTitleProgress>(IMDbTitle_Updated);
-      await result.ScrapeAsync();
-      result.Updated -= new Action<IMDbTitleProgress>(IMDbTitle_Updated);
 
       return result;
     }

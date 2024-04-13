@@ -1,14 +1,21 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using tar.IMDbExporter.Base;
+using tar.IMDbExporter.Gui.Custom;
+using tar.IMDbExporter.Models;
 using tar.IMDbScraper.Base;
+using tar.IMDbScraper.Enums;
+using tar.IMDbScraper.Models;
 
 namespace tar.IMDbExporter.Gui {
   public partial class MainForm : Form {
     #region --- constructor -----------------------------------------------------------------------
     public MainForm(string[] arguments) {
       InitializeComponent();
+
+      Text = $"IMDbExporter v{Assembly.GetEntryAssembly()?.GetName().Version}";
 
       Settings.Current.Load();
 
@@ -25,13 +32,16 @@ namespace tar.IMDbExporter.Gui {
       nudUpdatePeriod.Value       = Settings.Current.Stored.UpdateHashesPeriodInDays;
       tbxCountryCode.Text         = region2letter;
       tbxExportFolder.Text        = Settings.Current.Stored.ExportFolder;
-      tbxIMDbID.Text              = "tt0133093"; // Matrix (1999)
       tbxPathToHashFile.Text      = Settings.Current.Stored.PathToHashFile;
 
       if (arguments.Length > 0) {
         Match match = RegexIMDbID().Match(arguments[0]);
         if (match.Success) {
-          tbxIMDbID.Text = match.Value;
+          _titles.Add(
+            new() {
+              Id = match.Value
+            }
+          );
         }
       }
 
@@ -44,21 +54,109 @@ namespace tar.IMDbExporter.Gui {
       tbxCountryCode.Enabled = chbxExportTxt.Checked;
     }
     #endregion
+    #region --- fields ----------------------------------------------------------------------------
+    private readonly HttpClient                        _httpClient    = new();
+    private readonly Dictionary<string, Image>         _imageCache    = [];
+    private          bool                              _isTaskRunning = false;
+    private          string                            _searchValue   = string.Empty;
+    private readonly SortableBindingList<SearchResult> _titles        = [];
+    #endregion
     #region --- regex -----------------------------------------------------------------------------
     [GeneratedRegex(@"tt\d+", RegexOptions.IgnoreCase)]
     private static partial Regex RegexIMDbID();
     #endregion
 
-    #region --- get imdb id -----------------------------------------------------------------------
-    private void GetImdbId() {
-      if (tbxUrl.Text.Length > 0) {
-        Match match = RegexIMDbID().Match(tbxUrl.Text);
-        if (match.Success) {
-          tbxIMDbID.Text = match.Value;
-        }
+    #region --- add title -------------------------------------------------------------------------
+    internal void AddTitle(SearchResult title) {
+      if (_titles.FirstOrDefault(x => x.Id == title.Id) is null) {
+        _titles.Add(title);
       }
     }
     #endregion
+    #region --- download image -------------------------------------------------------- (async) ---
+    private async Task<Image?> DownloadImageAsync(string? url) {
+      if (string.IsNullOrEmpty(url)) {
+        return null;
+      }
+
+      if (_imageCache.TryGetValue(url, out Image? result)) {
+        return result;
+      }
+
+      var ext    = Path.GetExtension(url);
+      var newUrl = $"{url[..^ext.Length]}._V1_QL75_UY148_CR9,0,100,148_{ext}";
+
+      byte[] imageBytes = await _httpClient.GetByteArrayAsync(newUrl);
+      Image image = Image.FromStream(new MemoryStream(imageBytes));
+
+      _imageCache.Add(url, image);
+
+      return image;
+    }
+    #endregion
+    #region --- get imdb title settings -----------------------------------------------------------
+    private IMDbTitleSettings GetImdbTitleSettings() {
+      return new() {
+        AlternateTitles = chbxAlternateTitles.Checked || chbxScrapeEverything.Checked,
+        AlternateVersions = chbxAlternateVersions.Checked || chbxScrapeEverything.Checked,
+        Awards = chbxAwards.Checked || chbxScrapeEverything.Checked,
+        Companies = chbxCompanies.Checked || chbxScrapeEverything.Checked,
+        Connections = chbxConnections.Checked || chbxScrapeEverything.Checked,
+        CrazyCredits = chbxCrazyCredits.Checked || chbxScrapeEverything.Checked,
+        Crew = chbxCrew.Checked || chbxScrapeEverything.Checked,
+        CriticReviews = chbxCriticReviews.Checked || chbxScrapeEverything.Checked,
+        EpisodesCard = chbxEpisodesCard.Checked || chbxScrapeEverything.Checked,
+        ExternalReviews = chbxExternalReviews.Checked || chbxScrapeEverything.Checked,
+        ExternalSites = chbxExternalSites.Checked || chbxScrapeEverything.Checked,
+        FAQPage = chbxFAQPage.Checked || chbxScrapeEverything.Checked,
+        FilmingDates = chbxFilmingDates.Checked || chbxScrapeEverything.Checked,
+        FilmingLocations = chbxFilmingLocations.Checked || chbxScrapeEverything.Checked,
+        Goofs = chbxGoofs.Checked || chbxScrapeEverything.Checked,
+        Keywords = chbxKeywords.Checked || chbxScrapeEverything.Checked,
+        LocationsPage = chbxLocationsPage.Checked || chbxScrapeEverything.Checked,
+        MainNews = chbxMainNews.Checked || chbxScrapeEverything.Checked,
+        MainPage = chbxMainPage.Checked || chbxScrapeEverything.Checked,
+        News = chbxNews.Checked || chbxScrapeEverything.Checked,
+        NewsRequests = (int)nudNews.Value,
+        NextEpisode = chbxNextEpisode.Checked || chbxScrapeEverything.Checked,
+        ParentalGuidePage = chbxParentalGuidePage.Checked || chbxScrapeEverything.Checked,
+        PlotSummaries = chbxPlotSummaries.Checked || chbxScrapeEverything.Checked,
+        Quotes = chbxQuotes.Checked || chbxScrapeEverything.Checked,
+        RatingsPage = chbxRatingsPage.Checked || chbxScrapeEverything.Checked,
+        ReferencePage = chbxReferencePage.Checked || chbxScrapeEverything.Checked,
+        ReleaseDates = chbxReleaseDates.Checked || chbxScrapeEverything.Checked,
+        Seasons = chbxSeasons.Checked || chbxScrapeEverything.Checked,
+        Soundtrack = chbxSoundtrack.Checked || chbxScrapeEverything.Checked,
+        Storyline = chbxStoryline.Checked || chbxScrapeEverything.Checked,
+        Taglines = chbxTaglines.Checked || chbxScrapeEverything.Checked,
+        TechnicalPage = chbxTechnicalPage.Checked || chbxScrapeEverything.Checked,
+        Topics = chbxTopics.Checked || chbxScrapeEverything.Checked,
+        TriviaEntries = chbxTriviaEntries.Checked || chbxScrapeEverything.Checked,
+        UserReviews = chbxUserReviews.Checked || chbxScrapeEverything.Checked,
+        UserReviewsRequests = (int)nudUserReviews.Value
+      };
+    }
+    #endregion
+    #region --- init dgv --------------------------------------------------------------------------
+		private void InitDGV() {
+      dgv.AutoGenerateColumns = false;
+
+      dgv.Columns.AddRange(
+        [
+				  new DataGridViewButtonColumn()   { Name = "Remove", Text = "X", UseColumnTextForButtonValue = true, Width = 60 },
+				  new DataGridViewTextBoxColumn()  { DataPropertyName = Name = "Id",    HeaderText = "ID",    Width = 60 },
+				  new DataGridViewTextBoxColumn()  { DataPropertyName = Name = "Name",  HeaderText = "Name",  Width = 80 },
+				  new DataGridViewTextBoxColumn()  { DataPropertyName = Name = "Type",  HeaderText = "Type",  Width = 80 },
+				  new DataGridViewTextBoxColumn()  { DataPropertyName = Name = "Years", HeaderText = "Years", Width = 80 },
+				  new DataGridViewProgressColumn() { DataPropertyName = Name = "Progress", HeaderText = "Progress", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill },
+        ]
+      );
+
+      dgv.DefaultCellStyle.WrapMode = DataGridViewTriState.True;
+
+      dgv.DataSource = _titles;
+		}
+		#endregion
 		#region --- on closing ------------------------------------------------------------------------
 		protected override void OnClosing(CancelEventArgs e) {
 			base.OnClosing(e);
@@ -76,6 +174,8 @@ namespace tar.IMDbExporter.Gui {
       );
 
       CenterToScreen();
+      InitDGV();
+      UpdateControlsByCheckBoxes();
       WireEvents();
     }
     #endregion
@@ -86,8 +186,8 @@ namespace tar.IMDbExporter.Gui {
         return false;
       }
 
-      if (tbxIMDbID.Text.Length == 0) {
-        lblStatus.Text = "(ERROR) Please set IMDb ID!";
+      if (_titles.Count == 0) {
+        lblStatus.Text = "(ERROR) Please add IMDb title(s)!";
         return false;
       }
 
@@ -101,110 +201,179 @@ namespace tar.IMDbExporter.Gui {
     #endregion
     #region --- process --------------------------------------------------------------- (async) ---
     private async Task ProcessAsync() {
+      void UpdateStatus(int steps, int step, string description) {
+        int percentage = (int)((step / (float)steps) * 100);
+        lblStatus.Text    = $"{percentage} %: {description}";
+        progressBar.Value = percentage;
+      }
+
       if (!PreCheck()) {
         return;
       }
 
       ToggleControls();
 
+      int steps = _titles.Count + 1;
+      int step  = 1;
+
       // set hash file location and update hashes if period days have past
-      lblStatus.Text = "Hash update check. If browser opens, wait until it is closed automatically!";
+      if (InvokeRequired) {
+        Invoke(() => UpdateStatus(steps, step, $"Hash update check. If browser opens, wait until it is closed automatically!"));
+      } else { 
+        UpdateStatus(steps, step, $"Hash update check. If browser opens, wait until it is closed automatically!");
+      }
+      
       await Scraper.ScrapeAllOperationHashesAsync(
         Settings.Current.Stored.PathToHashFile,
         DateTime.Now.AddDays(Settings.Current.Stored.UpdateHashesPeriodInDays * -1)
       );
 
-      #region --- get imdb title ------------------------------------------------------------------
-      string iMDbID = tbxIMDbID.Text;
-
-      IMDbTitleSettings settings = new() {
-        AlternateTitles = chbxAlternateTitles.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        AlternateVersions = chbxAlternateVersions.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Awards = chbxAwards.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Companies = chbxCompanies.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Connections = chbxConnections.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        CrazyCredits = chbxCrazyCredits.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Crew = chbxCrew.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        CriticReviews = chbxCriticReviews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        EpisodesCard = chbxEpisodesCard.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        ExternalReviews = chbxExternalReviews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        ExternalSites = chbxExternalSites.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        FAQPage = chbxFAQPage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        FilmingDates = chbxFilmingDates.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        FilmingLocations = chbxFilmingLocations.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Goofs = chbxGoofs.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Keywords = chbxKeywords.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        LocationsPage = chbxLocationsPage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        MainNews = chbxMainNews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        MainPage = chbxMainPage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        News = chbxNews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        NewsRequests = (int)nudNews.Value,
-        NextEpisode = chbxNextEpisode.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        ParentalGuidePage = chbxParentalGuidePage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        PlotSummaries = chbxPlotSummaries.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Quotes = chbxQuotes.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        RatingsPage = chbxRatingsPage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        ReferencePage = chbxReferencePage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        ReleaseDates = chbxReleaseDates.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Seasons = chbxSeasons.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Soundtrack = chbxSoundtrack.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Storyline = chbxStoryline.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Taglines = chbxTaglines.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        TechnicalPage = chbxTechnicalPage.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        Topics = chbxTopics.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        TriviaEntries = chbxTriviaEntries.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        UserReviews = chbxUserReviews.CheckState == CheckState.Checked || chbxScrapeEverything.CheckState == CheckState.Checked,
-        UserReviewsRequests = (int)nudUserReviews.Value
-      };
-
-      IMDbTitle? imdbTitle = await Operator.ScrapeIMDbTitleAsync(
-        this,
-        iMDbID,
-        settings
-      );
-
-      if (imdbTitle is null) {
-        lblStatus.Text = $"(ERROR) IMDb title '{iMDbID}' could not be scraped!";
-        ToggleControls(true);
-        return;
-      }
-      #endregion
-      #region --- export file(s) ------------------------------------------------------------------
-      if (chbxExportJson.CheckState == CheckState.Checked || chbxExportTxt.CheckState == CheckState.Checked) {
-        Directory.CreateDirectory(Settings.Current.Stored.ExportFolder);
-
-        string filePath = Path.Combine(
-          Settings.Current.Stored.ExportFolder,
-          iMDbID
-        );
-
-        if (chbxExportJson.CheckState == CheckState.Checked) {
-          string exportJson = imdbTitle.GetJson();
-          await File.WriteAllTextAsync(
-            $"{filePath}.json",
-            exportJson
-          );
+      foreach (SearchResult title in _titles) {
+        if (InvokeRequired) {
+          Invoke(() => UpdateStatus(steps, step, $"{title.Name} [{title.Id}]"));
+        } else { 
+          UpdateStatus(steps, step, $"{title.Name} [{title.Id}]");
         }
 
-        if (chbxExportTxt.CheckState == CheckState.Checked) {
-          string exportText = Operator.Parse(
-            imdbTitle,
-            tbxCountryCode.Text
+        IMDbTitle? imdbTitle = await title.ScrapeAsync(GetImdbTitleSettings());
+
+        if (imdbTitle is null) {
+          continue;
+        }
+
+        if (chbxExportJson.CheckState == CheckState.Checked || chbxExportTxt.CheckState == CheckState.Checked) {
+          Directory.CreateDirectory(Settings.Current.Stored.ExportFolder);
+
+          string filePath = Path.Combine(
+            Settings.Current.Stored.ExportFolder,
+            title.Id
           );
 
-          await File.WriteAllTextAsync(
-            $"{filePath}.txt",
-            exportText
-          );
+          if (chbxExportJson.CheckState == CheckState.Checked) {
+            string exportJson = imdbTitle.GetJson();
+            
+            await File.WriteAllTextAsync(
+              $"{filePath}.json",
+              exportJson
+            );
+
+            title.Progress.Description = ".json file written";
+          }
+
+          if (chbxExportTxt.CheckState == CheckState.Checked) {
+            string exportText = Operator.Parse(
+              imdbTitle,
+              tbxCountryCode.Text
+            );
+
+            await File.WriteAllTextAsync(
+              $"{filePath}.txt",
+              exportText
+            );
+
+          }
+
+          title.Progress.Description = chbxExportJson.CheckState == CheckState.Checked && chbxExportTxt.CheckState == CheckState.Checked
+            ? "(OK) Files written"
+            : "(OK) File written";
+
+          dgv.Invalidate();
         }
+
+        step++;
       }
 
-      lblStatus.Text = chbxExportJson.CheckState == CheckState.Checked && chbxExportTxt.CheckState == CheckState.Checked
-        ? "(OK) Files written"
-        : "(OK) File written";
-      #endregion
+      if (InvokeRequired) {
+        Invoke(() => UpdateStatus(steps, step, $"All titles processed."));
+      } else { 
+        UpdateStatus(steps, step, $"All titles processed.");
+      }
 
       ToggleControls(true);
+    }
+    #endregion
+		#region --- remove title ----------------------------------------------------------------------
+		private void RemoveTitle(SearchResult title) {
+      _titles.Remove(title);
+      dgv.AutoResizeColumns();
+    }
+    #endregion
+    #region --- search ----------------------------------------------------------------------------
+    private async Task Search() {
+      #region --- stop task -----------------------------------------------------------------------
+      bool StopTask() {
+        if (_searchValue == tbxSearch.Text) {
+          return false;
+        }
+
+        _isTaskRunning = false;
+        return true;
+      }
+      #endregion
+
+      while (_isTaskRunning) {
+        await Task.Delay(50);
+      }
+
+      if (_searchValue == tbxSearch.Text) {
+        return;
+      }
+
+      _isTaskRunning = true;
+      _searchValue = tbxSearch.Text;
+
+      await Task.Delay(400);
+
+      if (StopTask()) {
+        return;
+      }
+      
+      flpnl.Controls.Clear();
+
+      List<Suggestion> suggestions = await Scraper.ScrapeSuggestionsAsync(
+        tbxSearch.Text,
+        SuggestionsCategory.Titles,
+        true
+      );
+
+      foreach (Suggestion suggestion in suggestions) {
+        if (StopTask()) {
+          return;
+        }
+
+        string id       = string.IsNullOrEmpty(suggestion.ID)       ? string.Empty : suggestion.ID;
+        Image? image    = await DownloadImageAsync(suggestion.ImageURL);
+        string imageUrl = string.IsNullOrEmpty(suggestion.ImageURL) ? string.Empty : suggestion.ImageURL;
+        string name     = string.IsNullOrEmpty(suggestion.Name)     ? string.Empty : suggestion.Name;
+        string notes    = string.IsNullOrEmpty(suggestion.Notes)    ? string.Empty : suggestion.Notes;
+        string type     = string.IsNullOrEmpty(suggestion.Type)     ? string.Empty : suggestion.Type;
+        string url      = string.IsNullOrEmpty(suggestion.URL)      ? string.Empty : suggestion.URL;
+        string yearFrom = suggestion.YearFrom is null               ? string.Empty : $"{suggestion.YearFrom}";
+        string yearTo   = suggestion.YearTo is null                 ? string.Empty : $"-{suggestion.YearTo}";
+
+        CardControl cardControl = new(
+          new() {
+            Id       = id,
+            Image    = image,
+            ImageUrl = imageUrl,
+            Name     = name,
+            Notes    = notes,
+            Type     = type,
+            Url      = url,
+            Years    = yearFrom + yearTo
+          }
+        );
+
+        if (InvokeRequired) {
+          Invoke(
+            () => flpnl.Controls.Add(cardControl)
+          );
+        } else {
+          flpnl.Controls.Add(cardControl);
+        }
+      }
+
+      _isTaskRunning = false;
     }
     #endregion
     #region --- select export folder --------------------------------------------------------------
@@ -237,7 +406,6 @@ namespace tar.IMDbExporter.Gui {
         btnUpdateHashes.Enabled = enable;
         tbxCountryCode.Enabled = enable;
         tbxExportFolder.Enabled = enable;
-        tbxIMDbID.Enabled = enable;
       }
 
       if (InvokeRequired) {
@@ -250,8 +418,11 @@ namespace tar.IMDbExporter.Gui {
     #region --- update controls by check boxes ----------------------------------------------------
     private void UpdateControlsByCheckBoxes() {
       btnProcess.Enabled            =
-      grbxExport.Enabled            =
-      grbxScrape.Enabled            = chbxExportJson.Checked || chbxExportTxt.Checked;
+      btnExportFolder.Enabled       =
+      grbxScrape.Enabled            =
+      tbxExportFolder.Enabled       = chbxExportJson.Checked || chbxExportTxt.Checked;
+
+      cbxCountryCode.Enabled        = chbxExportTxt.Checked;
 
       chbxAlternateTitles.Enabled   =
       chbxAlternateVersions.Enabled =
@@ -290,21 +461,6 @@ namespace tar.IMDbExporter.Gui {
       chbxUserReviews.Enabled       = !chbxScrapeEverything.Checked;
       nudNews.Enabled               = chbxNews.Checked || chbxScrapeEverything.CheckState == CheckState.Checked;
       nudUserReviews.Enabled        = chbxUserReviews.Checked || chbxScrapeEverything.Checked;
-      tbxCountryCode.Enabled        = chbxExportTxt.Checked;
-    }
-    #endregion
-    #region --- update status by progress ---------------------------------------------------------
-    public void UpdateStatusByProgress(IMDbTitleProgress progress) {
-      void action() {
-        lblStatus.Text = progress.Description;
-        progressBar.Value = progress.Value;
-      }
-
-      if (InvokeRequired) {
-        Invoke(action);
-      } else {
-        action();
-      }
     }
     #endregion
     #region --- wire events -----------------------------------------------------------------------
@@ -319,6 +475,7 @@ namespace tar.IMDbExporter.Gui {
       chbxNews.CheckStateChanged             +=       (s, e) => UpdateControlsByCheckBoxes();
       chbxScrapeEverything.CheckStateChanged +=       (s, e) => UpdateControlsByCheckBoxes();
       chbxUserReviews.CheckStateChanged      +=       (s, e) => UpdateControlsByCheckBoxes();
+      dgv.CellClick                          +=       (s, e) => { if (e.RowIndex > -1 && dgv.Columns[e.ColumnIndex] is DataGridViewButtonColumn) { RemoveTitle((SearchResult)dgv.Rows[e.RowIndex].DataBoundItem); } };
       nudNews.EnabledChanged                 +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
       nudNews.ValueChanged                   +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
       nudUpdatePeriod.ValueChanged           +=       (s, e) => Settings.Current.Stored.UpdateHashesPeriodInDays = (int)nudUpdatePeriod.Value;
@@ -326,7 +483,13 @@ namespace tar.IMDbExporter.Gui {
       nudUserReviews.ValueChanged            +=       (s, e) => lblWarning.Visible = (nudNews.Enabled && nudNews.Value == 0) || (nudUserReviews.Enabled && nudUserReviews.Value == 0);
       tbxExportFolder.TextChanged            +=       (s, e) => Settings.Current.Stored.ExportFolder = tbxExportFolder.Text;
       tbxPathToHashFile.TextChanged          +=       (s, e) => Settings.Current.Stored.PathToHashFile = tbxPathToHashFile.Text;
-      tbxUrl.Validated                       +=       (s, e) => GetImdbId();
+      tbxSearch.TextChanged                  += async (s, e) => await Search();
+      tbxUrl.TextChanged                     +=       (s, e) => {
+        Match match = RegexIMDbID().Match(tbxUrl.Text);
+        if (match.Success) {
+          tbxSearch.Text = match.Value;
+        }
+      };
     }
     #endregion
   }
